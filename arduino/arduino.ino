@@ -1,12 +1,12 @@
-int greenLedPin = 7;
-int greenLedState = LOW;
-int yellowLedPin = 5;
+int greenLedPin    = 7;
+int greenLedState  = LOW;
+int yellowLedPin   = 5;
 int yellowLedState = LOW;
-int redLedPin = 3;
-int redLedState = LOW;
+int redLedPin      = 3;
+int redLedState    = LOW;
 
 int incomingByte = 0;
-long interval = 1000;
+long interval    = 1000;
 
 void setup() {                
   pinMode(greenLedPin, OUTPUT);
