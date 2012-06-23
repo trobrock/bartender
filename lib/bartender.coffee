@@ -19,6 +19,7 @@ class Bartender
     (ingredient for ingredient in @ingredients when ingredient.name == name)[0]
 
   make: (drink) ->
+    console.log "Making a #{drink.name} bitch!"
     drink.recipe.forEach (item) =>
       ingredient  = item.ingredient
       amount      = item.amount
