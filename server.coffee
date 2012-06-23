@@ -1,14 +1,8 @@
-util = require 'util'
-Drink = require './lib/drink'
-Ingredient = require './lib/ingredient'
-Measurement = require './lib/measurement'
+util        = require 'util'
+Bartender   = require './lib/bartender'
 
-rum = new Ingredient(name: "Rum", description: "the best liquor ever")
-coke = new Ingredient(name: "Coka Cola")
+bartender = new Bartender()
 
-# Rum and coke
-rumCoke = new Drink()
-rumCoke.add(rum, Measurement.OUNCE.times(2))
-rumCoke.add(coke, Measurement.CUP)
+rumCoke = bartender.find("Rum and Coke")
+bartender.make(rumCoke)
 
-console.log rumCoke.toString()
