@@ -1,3 +1,4 @@
+redis       = require 'redis'
 Ingredient  = require './ingredient'
 Robot       = require './robot'
 Drink       = require './drink'
@@ -9,8 +10,7 @@ class Bartender
 
   constructor: ->
     @robot = new Robot()
-    this.addIngredients()
-    this.createDrinks()
+    @db = redis.createClient()
 
   find: (name) ->
     (drink for drink in @drinks when drink.name == name)[0]
@@ -26,9 +26,16 @@ class Bartender
 
       @robot.run(ingredient.pin, amount.conversion)
 
+  addIngredient: (ingredient) ->
+    @db.sadd "ingredients", JSON.stringify(new Ingredient(ingredient))
+
+  removeIngredient: (ingredient) ->
+    ingredient = this.findIngredient(ingredient.name)
+    @db.srem "ingredients", JSON.stringify(ingredient)
+
   addIngredients: ->
-    @ingredients.push new Ingredient(name: "Rum", description: "the best liquor ever", pin: 7)
-    @ingredients.push new Ingredient(name: "Coka Cola", pin: 5)
+    @db.smembers "ingredients", (err, ingredient) =>
+      @ingredients.push new Ingredient(JSON.parse(ingredient))
 
   createDrinks: ->
     # Rum and coke
@@ -36,6 +43,7 @@ class Bartender
     rumCoke.name = "Rum and Coke"
     rumCoke.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
     rumCoke.add(this.findIngredient("Coka Cola"), Measurement.CUP)
+    console.log JSON.stringify(rumCoke)
     @drinks.push rumCoke
 
 module.exports = Bartender
