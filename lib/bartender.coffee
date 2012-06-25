@@ -27,8 +27,8 @@ class Bartender
       @robot.run(ingredient.pin, amount.conversion)
 
   addIngredients: ->
-    @ingredients.push new Ingredient(name: "Rum", description: "the best liquor ever", pin: 1)
-    @ingredients.push new Ingredient(name: "Coka Cola", pin: 3)
+    @ingredients.push new Ingredient(name: "Rum", description: "the best liquor ever", pin: 7)
+    @ingredients.push new Ingredient(name: "Coka Cola", pin: 5)
 
   createDrinks: ->
     # Rum and coke
