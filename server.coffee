@@ -1,5 +1,5 @@
 util        = require 'util'
-http        = require 'http'
+app         = require('express').createServer()
 Bartender   = require './lib/bartender'
 
 bartender = new Bartender()
@@ -14,13 +14,9 @@ bartender = new Bartender()
 #   }
 
 
-server = http.createServer (req, res) ->
-  switch req.method
-    when "POST"
-      switch req.url
-        when "/order/create"
-          rumCoke = bartender.find("Rum and Coke")
-          bartender.make(rumCoke)
-          res.write JSON.stringify({ success: true })
-  res.end()
-server.listen(8080)
+app.post '/orders/create', (req, res) ->
+  rumCoke = bartender.find("Rum and Coke")
+  bartender.make(rumCoke)
+  res.send JSON.stringify({ success: true })
+
+app.listen(8080)
