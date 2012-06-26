@@ -34,8 +34,8 @@ class Bartender
     @db.srem "ingredients", JSON.stringify(ingredient)
 
   addIngredients: ->
-    @db.smembers "ingredients", (err, ingredient) =>
-      @ingredients.push new Ingredient(JSON.parse(ingredient))
+    @db.smembers "ingredients", (err, ingredients) =>
+      @ingredients.push new Ingredient(JSON.parse(ingredient)) for ingredient in ingredients
 
   createDrinks: ->
     # Rum and coke
