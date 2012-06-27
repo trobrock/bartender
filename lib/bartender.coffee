@@ -45,7 +45,7 @@ class Bartender
     @drinks.splice(i, 1) for i,d in @drinks when d == drink
     @db.srem "drinks", msgpack.pack(drink, true)
 
-  createDrink: (drink) ->
+  addDrink: (drink) ->
     recipe = drink.recipe
 
     drink = new Drink(drink)
@@ -55,7 +55,7 @@ class Bartender
 
     @db.sadd "drinks", msgpack.pack(drink, true)
 
-  createDrinks: ->
+  addDrinks: ->
     @db.smembers "drinks", (err, drinks) =>
       @drinks.push new Drink(drink) for drink in drinks
 

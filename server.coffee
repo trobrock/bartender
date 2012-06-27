@@ -8,7 +8,7 @@ bartender = new Bartender()
 
 # Load object from redis
 bartender.addIngredients()
-bartender.createDrinks()
+bartender.addDrinks()
 
 # Auto parse json
 app.use express.bodyParser()
