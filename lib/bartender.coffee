@@ -6,18 +6,17 @@ Drink       = require './drink'
 Measurement = require './measurement'
 
 class Bartender
-  drinks: []
-  ingredients: []
+  drinks: Drink.collection()
+  ingredients: Ingredient.collection()
 
   constructor: ->
     @robot = new Robot()
     @db = redis.createClient()
+    Ingredient.db = redis.createClient()
+    Drink.db = redis.createClient()
 
   find: (name) ->
     (drink for drink in @drinks when drink.name == name)[0]
-
-  findIngredient: (name) ->
-    (ingredient for ingredient in @ingredients when ingredient.name == name)[0]
 
   make: (drink) ->
     console.log "Making a #{drink.name} bitch!"
@@ -26,6 +25,9 @@ class Bartender
       amount      = item.amount
 
       @robot.run(ingredient.pin, amount.conversion)
+
+  findIngredient: (name) ->
+    (ingredient for ingredient in @ingredients when ingredient.name == name)[0]
 
   addIngredient: (ingredient) ->
     ingredient = new Ingredient(ingredient)
@@ -37,8 +39,7 @@ class Bartender
     @db.srem "ingredients", msgpack.pack(ingredient, true)
 
   addIngredients: ->
-    @db.smembers "ingredients", (err, ingredients) =>
-      @ingredients.push new Ingredient(msgpack.unpack(ingredient)) for ingredient in ingredients
+    Ingredient.sync()
 
   removeDrink: (drink) ->
     drink = this.find(drink.name)
@@ -56,7 +57,6 @@ class Bartender
     @db.sadd "drinks", msgpack.pack(drink, true)
 
   addDrinks: ->
-    @db.smembers "drinks", (err, drinks) =>
-      @drinks.push new Drink(drink) for drink in drinks
+    Drink.sync()
 
 module.exports = Bartender
