@@ -40,7 +40,8 @@ class Bartender
 
   createDrink: (drink) ->
     recipe = drink.recipe
-    drink = new Drink(name: drink.name, description: drink.description)
+
+    drink = new Drink(drink)
 
     drink.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
     drink.add(this.findIngredient("Coka Cola"), Measurement.CUP)
@@ -50,9 +51,9 @@ class Bartender
   createDrinks: ->
     @db.smembers "drinks", (err, drinks) =>
       @drinks.push new Drink(drink) for drink in drinks
-    # This is temporary until the api is built
-    if !@drinks.length
-      this.createDrink(name: "Rum and Coke", description: "best drink eva", recipe: [["2 ounces", "Rum"], ["1 cup", "Coka Cola"]])
-      this.createDrinks()
+      # This is temporary until the api is built
+      if !@drinks.length
+        this.createDrink(name: "Rum and Coke", description: "best drink eva", recipe: [["2 ounces", "Rum"], ["1 cup", "Coka Cola"]])
+        this.createDrinks()
 
 module.exports = Bartender
