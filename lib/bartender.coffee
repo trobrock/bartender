@@ -1,3 +1,5 @@
+redis       = require 'redis'
+msgpack     = require './msgpack'
 Ingredient  = require './ingredient'
 Robot       = require './robot'
 Drink       = require './drink'
@@ -9,8 +11,7 @@ class Bartender
 
   constructor: ->
     @robot = new Robot()
-    this.addIngredients()
-    this.createDrinks()
+    @db = redis.createClient()
 
   find: (name) ->
     (drink for drink in @drinks when drink.name == name)[0]
@@ -26,16 +27,32 @@ class Bartender
 
       @robot.run(ingredient.pin, amount.conversion)
 
+  addIngredient: (ingredient) ->
+    @db.sadd "ingredients", msgpack.pack(new Ingredient(ingredient), true)
+
+  removeIngredient: (ingredient) ->
+    ingredient = this.findIngredient(ingredient.name)
+    @db.srem "ingredients", msgpack.pack(ingredient, true)
+
   addIngredients: ->
-    @ingredients.push new Ingredient(name: "Rum", description: "the best liquor ever", pin: 7)
-    @ingredients.push new Ingredient(name: "Coka Cola", pin: 5)
+    @db.smembers "ingredients", (err, ingredients) =>
+      @ingredients.push new Ingredient(msgpack.unpack(ingredient)) for ingredient in ingredients
+
+  createDrink: (drink) ->
+    recipe = drink.recipe
+    drink = new Drink(name: drink.name, description: drink.description)
+
+    drink.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
+    drink.add(this.findIngredient("Coka Cola"), Measurement.CUP)
+
+    @db.sadd "drinks", msgpack.pack(drink, true)
 
   createDrinks: ->
-    # Rum and coke
-    rumCoke = new Drink()
-    rumCoke.name = "Rum and Coke"
-    rumCoke.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
-    rumCoke.add(this.findIngredient("Coka Cola"), Measurement.CUP)
-    @drinks.push rumCoke
+    @db.smembers "drinks", (err, drinks) =>
+      @drinks.push new Drink(drink) for drink in drinks
+    # This is temporary until the api is built
+    if !@drinks.length
+      this.createDrink(name: "Rum and Coke", description: "best drink eva", recipe: [["2 ounces", "Rum"], ["1 cup", "Coka Cola"]])
+      this.createDrinks()
 
 module.exports = Bartender
