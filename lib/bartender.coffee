@@ -40,6 +40,11 @@ class Bartender
     @db.smembers "ingredients", (err, ingredients) =>
       @ingredients.push new Ingredient(msgpack.unpack(ingredient)) for ingredient in ingredients
 
+  removeDrink: (drink) ->
+    drink = this.find(drink.name)
+    @drinks.splice(i, 1) for i,d in @drinks when d == drink
+    @db.srem "drinks", msgpack.pack(drink, true)
+
   createDrink: (drink) ->
     recipe = drink.recipe
 
@@ -53,9 +58,5 @@ class Bartender
   createDrinks: ->
     @db.smembers "drinks", (err, drinks) =>
       @drinks.push new Drink(drink) for drink in drinks
-      # This is temporary until the api is built
-      if !@drinks.length
-        this.createDrink(name: "Rum and Coke", description: "best drink eva", recipe: [["2 ounces", "Rum"], ["1 cup", "Coka Cola"]])
-        this.createDrinks()
 
 module.exports = Bartender
