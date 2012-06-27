@@ -31,6 +31,9 @@ app.use express.bodyParser()
 ##### Ingredients #####
 # GET /ingredients
 # List all ingredients
+app.get '/ingredients', (req, res) ->
+  util.log "Listing ingredients"
+  res.send bartender.ingredients
 
 # PUT /ingredients
 # Update an ingredient
@@ -38,13 +41,14 @@ app.use express.bodyParser()
 # POST /ingredients
 # Create an ingredient
 app.post '/ingredients', (req, res) ->
+  util.log "Create new ingredient #{util.inspect(req.body)}"
   bartender.addIngredient(req.body)
   res.send { success: true }
 
 # DELETE /ingredients
 # Delete an ingredient
 app.del '/ingredients', (req, res) ->
-  console.log req.body
+  util.log "Deleting ingredient #{util.inspect(req.body)}"
   bartender.removeIngredient(req.body)
   res.send { success: true }
 
@@ -58,4 +62,5 @@ app.post '/orders', (req, res) ->
   res.send { success: true }
 
 # Listen somewhere
+util.log "Listening on port #{PORT}"
 app.listen(PORT)
