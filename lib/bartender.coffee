@@ -1,4 +1,5 @@
 redis       = require 'redis'
+msgpack     = require './msgpack'
 Ingredient  = require './ingredient'
 Robot       = require './robot'
 Drink       = require './drink'
@@ -27,15 +28,15 @@ class Bartender
       @robot.run(ingredient.pin, amount.conversion)
 
   addIngredient: (ingredient) ->
-    @db.sadd "ingredients", JSON.stringify(new Ingredient(ingredient))
+    @db.sadd "ingredients", msgpack.pack(new Ingredient(ingredient), true)
 
   removeIngredient: (ingredient) ->
     ingredient = this.findIngredient(ingredient.name)
-    @db.srem "ingredients", JSON.stringify(ingredient)
+    @db.srem "ingredients", msgpack.pack(ingredient, true)
 
   addIngredients: ->
     @db.smembers "ingredients", (err, ingredients) =>
-      @ingredients.push new Ingredient(JSON.parse(ingredient)) for ingredient in ingredients
+      @ingredients.push new Ingredient(msgpack.unpack(ingredient)) for ingredient in ingredients
 
   createDrinks: ->
     # Rum and coke
@@ -43,7 +44,6 @@ class Bartender
     rumCoke.name = "Rum and Coke"
     rumCoke.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
     rumCoke.add(this.findIngredient("Coka Cola"), Measurement.CUP)
-    console.log JSON.stringify(rumCoke)
     @drinks.push rumCoke
 
 module.exports = Bartender
