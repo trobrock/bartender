@@ -4,6 +4,8 @@ Bartender = require './lib/bartender'
 
 app       = express.createServer()
 bartender = new Bartender()
+bartender.addIngredients()
+bartender.createDrinks()
 
 app.use express.bodyParser()
 
