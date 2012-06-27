@@ -7,17 +7,6 @@ util        = require 'util'
 log = (obj) ->
   console.log msgpack.unpack(msgpack.pack(obj))
 
-drink = new Drink(name: "test drink")
-log drink
-
 ingredient = new Ingredient(name: "test ingredient", pin: 1)
-log ingredient
-
-measurement = Measurement.OUNCE
-log measurement
-
-drink.add ingredient, measurement
-log drink
-
-drink.add ingredient, measurement
-log drink
+test_obj = {recipe: [ingredient, ingredient]}
+log test_obj
