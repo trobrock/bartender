@@ -28,7 +28,9 @@ class Bartender
       @robot.run(ingredient.pin, amount.conversion)
 
   addIngredient: (ingredient) ->
-    @db.sadd "ingredients", msgpack.pack(new Ingredient(ingredient), true)
+    ingredient = new Ingredient(ingredient)
+    @ingredients.push ingredient
+    @db.sadd "ingredients", msgpack.pack(ingredient, true)
 
   removeIngredient: (ingredient) ->
     ingredient = this.findIngredient(ingredient.name)
