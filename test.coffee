@@ -22,3 +22,8 @@ log drink
 
 drink.add ingredient, measurement
 log drink
+
+# Super simple example.
+some_dup_obj = new Object()
+test_obj = {recipe: [some_dup_obj, some_dup_obj]}
+log test_obj
