@@ -5,12 +5,20 @@ msgpack     = require 'msgpack2'
 util        = require 'util'
 
 log = (obj) ->
-  console.log msgpack.unpack(msgpack.pack(obj))
+  console.log "JSON", JSON.stringify(obj)
+  console.log "msgpack", msgpack.unpack(msgpack.pack(obj))
+
+drink = new Drink(name: "test drink")
+log drink
 
 ingredient = new Ingredient(name: "test ingredient", pin: 1)
-ingredient2 = new Ingredient(name: "test ingredient", pin: 1)
-test_obj = {recipe: [ingredient, ingredient2]}
-log test_obj
+log ingredient
 
-test_obj = {recipe: [ingredient, ingredient]}
-console.log JSON.stringify(test_obj)
+measurement = Measurement.OUNCE
+log measurement
+
+drink.add ingredient, measurement
+log drink
+
+drink.add ingredient, measurement
+log drink
