@@ -12,5 +12,3 @@ bartender.addDrink {
   description: "best drink eva"
   recipe: [["2 ounces", "Rum"], ["1 cup", "Coka Cola"]]
 }
-
-bartender.db.end()
