@@ -21,9 +21,7 @@ class Bartender
       @robot.run(ingredient.pin, amount.conversion)
 
   addIngredient: (ingredient) ->
-    ingredient = new Ingredient(ingredient)
-    @ingredients.push ingredient
-    @db.sadd "ingredients", ingredient.pack()
+    Ingredient.create(ingredient)
 
   removeIngredient: (ingredient) ->
     ingredient = Ingredient.find(ingredient.name)
@@ -38,14 +36,11 @@ class Bartender
     @db.srem "drinks", drink.pack()
 
   addDrink: (drink) ->
-    recipe = drink.recipe
+    drink = Drink.create(drink)
 
-    drink = new Drink(drink)
-
+    # Still need these to persist to the db
     drink.add(Ingredient.find("Rum"), Measurement.OUNCE.times(2))
     drink.add(Ingredient.find("Coka Cola"), Measurement.CUP)
-
-    @db.sadd "drinks", drink.pack()
 
   addDrinks: ->
     Drink.sync()

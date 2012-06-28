@@ -17,5 +17,9 @@ Model.sync       = (callback) ->
   @db.smembers @key, (err, items) =>
     @collection().push new this(msgpack.unpack(item)) for item in items
     callback() if callback?
+Model.create     = (options) ->
+  obj = new this(options)
+  @collection().push obj
+  @db.sadd @key, obj.pack()
 
 module.exports = Model
