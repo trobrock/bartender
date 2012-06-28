@@ -3,6 +3,10 @@ class Drink
   description: null
   recipe: []
 
+  constructor: (options={}) ->
+    @name = options.name
+    @description = options.description
+
   add: (ingredient, amount) ->
     @recipe.push(ingredient: ingredient, amount: amount)
 
