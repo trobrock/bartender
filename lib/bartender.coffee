@@ -12,9 +12,6 @@ class Bartender
     @robot = new Robot()
     Ingredient.db = Drink.db = @db = redis.createClient()
 
-  find: (name) ->
-    (drink for drink in @drinks when drink.name == name)[0]
-
   make: (drink) ->
     console.log "Making a #{drink.name} bitch!"
     drink.recipe.forEach (item) =>
@@ -23,23 +20,20 @@ class Bartender
 
       @robot.run(ingredient.pin, amount.conversion)
 
-  findIngredient: (name) ->
-    (ingredient for ingredient in @ingredients when ingredient.name == name)[0]
-
   addIngredient: (ingredient) ->
     ingredient = new Ingredient(ingredient)
     @ingredients.push ingredient
     @db.sadd "ingredients", ingredient.pack()
 
   removeIngredient: (ingredient) ->
-    ingredient = this.findIngredient(ingredient.name)
+    ingredient = Ingredient.find(ingredient.name)
     @db.srem "ingredients", ingredient.pack()
 
   addIngredients: ->
     Ingredient.sync()
 
   removeDrink: (drink) ->
-    drink = this.find(drink.name)
+    drink = Drink.find(drink.name)
     @drinks.splice(i, 1) for i,d in @drinks when d == drink
     @db.srem "drinks", drink.pack()
 
@@ -48,8 +42,8 @@ class Bartender
 
     drink = new Drink(drink)
 
-    drink.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
-    drink.add(this.findIngredient("Coka Cola"), Measurement.CUP)
+    drink.add(Ingredient.find("Rum"), Measurement.OUNCE.times(2))
+    drink.add(Ingredient.find("Coka Cola"), Measurement.CUP)
 
     @db.sadd "drinks", drink.pack()
 

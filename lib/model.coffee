@@ -7,9 +7,12 @@ class Model
 
     msgpack.pack packableObject, true
 
-Model.collection = -> @_collection ?= []
 Model.db         = null
 Model.key        = ""
+
+Model.find       = (name) ->
+  (item for item in @collection() when item.name == name)[0]
+Model.collection = -> @_collection ?= []
 Model.sync       = (callback) ->
   @db.smembers @key, (err, items) =>
     @collection().push new this(msgpack.unpack(item)) for item in items
