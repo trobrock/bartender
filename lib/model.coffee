@@ -21,5 +21,6 @@ Model.create     = (options) ->
   obj = new this(options)
   @collection().push obj
   @db.sadd @key, obj.pack()
+  obj
 
 module.exports = Model

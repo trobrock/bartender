@@ -31,10 +31,12 @@ class Bartender
 
   removeIngredient: (ingredient) ->
     ingredient = Ingredient.find(ingredient.name)
+    return unless drink?
     @db.srem "ingredients", ingredient.pack()
 
   removeDrink: (drink) ->
     drink = Drink.find(drink.name)
+    return unless drink?
     @drinks.splice(i, 1) for i,d in @drinks when d == drink
     @db.srem "drinks", drink.pack()
 
