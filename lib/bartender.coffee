@@ -1,5 +1,4 @@
 redis       = require 'redis'
-msgpack     = require './msgpack'
 Ingredient  = require './ingredient'
 Robot       = require './robot'
 Drink       = require './drink'
@@ -11,9 +10,7 @@ class Bartender
 
   constructor: ->
     @robot = new Robot()
-    @db = redis.createClient()
-    Ingredient.db = redis.createClient()
-    Drink.db = redis.createClient()
+    Ingredient.db = Drink.db = @db = redis.createClient()
 
   find: (name) ->
     (drink for drink in @drinks when drink.name == name)[0]
@@ -32,11 +29,11 @@ class Bartender
   addIngredient: (ingredient) ->
     ingredient = new Ingredient(ingredient)
     @ingredients.push ingredient
-    @db.sadd "ingredients", msgpack.pack(ingredient, true)
+    @db.sadd "ingredients", ingredient.pack()
 
   removeIngredient: (ingredient) ->
     ingredient = this.findIngredient(ingredient.name)
-    @db.srem "ingredients", msgpack.pack(ingredient, true)
+    @db.srem "ingredients", ingredient.pack()
 
   addIngredients: ->
     Ingredient.sync()
@@ -44,7 +41,7 @@ class Bartender
   removeDrink: (drink) ->
     drink = this.find(drink.name)
     @drinks.splice(i, 1) for i,d in @drinks when d == drink
-    @db.srem "drinks", msgpack.pack(drink, true)
+    @db.srem "drinks", drink.pack()
 
   addDrink: (drink) ->
     recipe = drink.recipe
@@ -54,7 +51,7 @@ class Bartender
     drink.add(this.findIngredient("Rum"), Measurement.OUNCE.times(2))
     drink.add(this.findIngredient("Coka Cola"), Measurement.CUP)
 
-    @db.sadd "drinks", msgpack.pack(drink, true)
+    @db.sadd "drinks", drink.pack()
 
   addDrinks: ->
     Drink.sync()

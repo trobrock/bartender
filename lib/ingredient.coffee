@@ -1,6 +1,8 @@
 Model = require './model'
 
 class Ingredient extends Model
+  _attributes: ["name", "description", "pin"]
+
   name: null
   description: null
   pin: 0

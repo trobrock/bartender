@@ -1,5 +1,11 @@
+msgpack = require './msgpack'
+
 class Model
-  find: -> null
+  pack: ->
+    packableObject = {}
+    packableObject[attr] = this[attr] for attr in @_attributes
+
+    msgpack.pack packableObject, true
 
 Model.collection = -> @_collection ?= []
 Model.db         = null

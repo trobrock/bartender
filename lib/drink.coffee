@@ -1,6 +1,8 @@
 Model = require './model'
 
 class Drink extends Model
+  _attributes: ["name", "description", "recipe"]
+
   name: null
   description: null
   recipe: []
