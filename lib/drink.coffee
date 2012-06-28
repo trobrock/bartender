@@ -1,4 +1,8 @@
-class Drink
+Model = require './model'
+
+class Drink extends Model
+  _attributes: ["name", "description", "recipe"]
+
   name: null
   description: null
   recipe: []
@@ -14,5 +18,7 @@ class Drink
     string = @recipe.map (ingredient) ->
       "#{ingredient.amount.conversion} units of #{ingredient.ingredient.name}"
     string.join(", ")
+
+Drink.key = "drinks"
 
 module.exports = Drink

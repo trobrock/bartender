@@ -1,6 +1,7 @@
 util      = require 'util'
 express   = require 'express'
 Bartender = require './lib/bartender'
+Drink = require './lib/drink'
 
 PORT      = 8080
 app       = express.createServer()
@@ -57,7 +58,10 @@ app.del '/ingredients', (req, res) ->
 # POST /orders
 # Create a new order
 app.post '/orders', (req, res) ->
-  rumCoke = bartender.find("Rum and Coke")
+  rumCoke = Drink.find(name="Rum and Coke")
+  if not rumCoke
+    Drink.create(name="Rum and Coke")
+    rumCoke = Drink.find("Rum and Coke")
   bartender.make(rumCoke)
   res.send { success: true }
 

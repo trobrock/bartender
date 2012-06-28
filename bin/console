@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+util      = require('util');
+repl      = require('repl');
+Bartender = require('../lib/bartender');
+b         = new Bartender();
+
+util.log("setup the app, Bartender instantiated on 'b'");
+
+repl.start()
