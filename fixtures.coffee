@@ -1,7 +1,12 @@
 Bartender = require './lib/bartender'
 bartender = new Bartender()
 
-bartender.db.on 'idle', -> bartender.db.end()
+timer = null
+bartender.db.on 'idle', ->
+  clearTimeout(timer) if timer?
+  timer = setTimeout ->
+    bartender.db.end()
+  , 500
 
 bartender.removeDrink { name: "Rum and Coke" }
 bartender.removeIngredient { name: "Rum", description: "the best liquor ever", pin: 7 }
