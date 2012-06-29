@@ -1,6 +1,8 @@
 Bartender = require './lib/bartender'
 bartender = new Bartender()
 
+bartender.db.on 'idle', -> bartender.db.end()
+
 bartender.removeDrink { name: "Rum and Coke" }
 bartender.removeIngredient { name: "Rum", description: "the best liquor ever", pin: 7 }
 bartender.removeIngredient { name: "Coka Cola", pin: 5 }
