@@ -14,10 +14,26 @@ bartender.addDrinks()
 # Auto parse json
 app.use express.bodyParser()
 
+# This should neable us to develop locally with cross domain support
+allowCrossDomain = (req, res, next) ->
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+
+  # intercept OPTIONS method
+  if ('OPTIONS' == req.method)
+    res.send(200)
+  else
+    next()
+
+app.use(allowCrossDomain)
+
 
 ##### Drinks #####
 # GET /drinks
 # List all drinks
+app.get '/drinks', (req, res) ->
+  res.send bartender.drinks
 
 # PUT /drinks
 # Update a drink
