@@ -1,6 +1,6 @@
-Model = require './model'
+RedisOrm = require 'redis-orm'
 
-class Drink extends Model
+class Drink extends RedisOrm.Model
   _attributes: ["name", "description", "recipe"]
 
   name: null
