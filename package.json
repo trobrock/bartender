@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "dependencies": {
     "express": "2.5.x",
-    "duino": "0.0.7",
+    "duino": "git://github.com/trobrock/duino.git#configurable-baud",
     "hiredis": "*",
     "redis": "*",
     "redis-orm": "0.0.1"
